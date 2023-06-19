@@ -1,7 +1,9 @@
-﻿using EngineeringCentreDashboard.Interfaces;
+﻿using EngineeringCentreDashboard.Filters;
+using EngineeringCentreDashboard.Interfaces;
 using EngineeringCentreDashboard.Models;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
+using System.Net;
 
 namespace EngineeringCentreDashboard.Controllers
 {
@@ -13,6 +15,14 @@ namespace EngineeringCentreDashboard.Controllers
         public ToDoController(IToDoHelper helper)
         {
             _helper = helper;
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public IActionResult Add([FromBody] ToDo toDo)
+        {
+            _helper.Add(toDo);
+            return Ok(toDo);
         }
 
         [HttpGet]
@@ -27,12 +37,6 @@ namespace EngineeringCentreDashboard.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult Add([FromBody] ToDo toDo)
-        {
-            _helper.Add(toDo);
-            return Ok(toDo);
-        }
 
         [HttpGet]
         public IActionResult GetAll()
