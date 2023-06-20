@@ -1,42 +1,54 @@
-﻿using EngineeringCentreDashboard.Interfaces;
+﻿using EngineeringCentreDashboard.Data;
+using EngineeringCentreDashboard.Interfaces;
 using EngineeringCentreDashboard.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EngineeringCentreDashboard.Business
 {
     public class ToDoHelper : IToDoHelper
     {
-        private readonly IToDoDbContext _toDoDbContext;
-        public ToDoHelper(IToDoDbContext toDoDbContext)
+        private readonly ToDoDbContext _toDoDbContext;
+
+        public ToDoHelper(ToDoDbContext toDoDbContext)
         {
-             _toDoDbContext = toDoDbContext;
+            _toDoDbContext = toDoDbContext;
         }
 
-        public ToDo Add(ToDo toDo)
+        public async Task<ToDo> Get(int id)
         {
-            _toDoDbContext.Add(toDo);
+            return await _toDoDbContext.ToDoItems.FindAsync(id);
+        }
+
+        public async Task<ToDo> Add(ToDo toDo)
+        {
+            await _toDoDbContext.ToDoItems.AddAsync(toDo);
+            await _toDoDbContext.SaveChangesAsync();
             return toDo;
         }
 
-        public ToDo Get(int id)
+        public async Task<IEnumerable<ToDo>> GetAll()
         {
-            ToDo toDo = _toDoDbContext.Get(id).Result;
-            return toDo;
-        }
-        public IEnumerable<ToDo> GetAll()
-        {
-            return _toDoDbContext.GetAll().Result;
+            return await _toDoDbContext.ToDoItems.ToListAsync();
         }
 
-        public ToDo Update(ToDo toDo)
+        public async Task<ToDo> Update(ToDo toDo)
         {
-            _toDoDbContext.Update(toDo);
-            return toDo;
+            _toDoDbContext.ToDoItems.Update(toDo);
+            await _toDoDbContext.SaveChangesAsync();
+            return toDo; 
         }
 
-        public int Delete(int id)
+        public async Task Delete(int id)
         {
-            _toDoDbContext.Delete(id);
-            return id;
+            var toDo = await _toDoDbContext.ToDoItems.FindAsync(id);
+            if (toDo != null)
+            {
+                _toDoDbContext.ToDoItems.Remove(toDo);
+                await _toDoDbContext.SaveChangesAsync();
+            }
         }
     }
 }
+

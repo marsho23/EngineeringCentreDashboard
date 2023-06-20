@@ -19,6 +19,7 @@ namespace EngineeringCentreDashboard.Controllers
 
         [HttpPost]
         [ValidateModelState]
+        [Route("add")]
         public IActionResult Add([FromBody] ToDo toDo)
         {
             _helper.Add(toDo);
@@ -26,9 +27,10 @@ namespace EngineeringCentreDashboard.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(int id)
+        [Route("get")]
+        public async Task<IActionResult> Get(int id)
         {
-            ToDo toDo = _helper.Get(id);
+            ToDo toDo = await _helper.Get(id);
             if (toDo == null)
             {
                 return NotFound();
@@ -37,23 +39,25 @@ namespace EngineeringCentreDashboard.Controllers
         }
 
 
-
         [HttpGet]
-        public IActionResult GetAll()
+        [Route("getall")]
+        public async Task<IActionResult> GetAll()
         {
-            IEnumerable<ToDo> toDoList = _helper.GetAll();
+            IEnumerable<ToDo> toDoList = await _helper.GetAll();
             return Ok(toDoList);
         }
 
+
         [HttpPut]
-        public IActionResult Update(int id, [FromBody] ToDo toDo)
+        [Route("update")]
+        public async Task<IActionResult> Update(int id, [FromBody] ToDo toDo)
         {
             if (id != toDo.Id)
             {
                 return BadRequest();
             }
 
-            ToDo updatedToDo = _helper.Update(toDo);
+            ToDo updatedToDo = await _helper.Update(toDo);
             if (updatedToDo == null)
             {
                 return NotFound();
@@ -63,6 +67,7 @@ namespace EngineeringCentreDashboard.Controllers
         }
 
         [HttpDelete]
+        [Route("delete")]
         public IActionResult Delete(int id)
         {
             _helper.Delete(id);

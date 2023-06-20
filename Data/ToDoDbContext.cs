@@ -4,43 +4,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EngineeringCentreDashboard.Data
 {
-    public class ToDoDbContext : DbContext, IToDoDbContext
+    public class ToDoDbContext : DbContext
     {
         public DbSet<ToDo> ToDoItems { get; set; }
-        public ToDoDbContext(DbContextOptions<ToDoDbContext> options):base(options) { }
-       
-        public async Task<ToDo> Get(int id)
+
+        public ToDoDbContext(DbContextOptions<ToDoDbContext> options) : base(options)
         {
-            return await ToDoItems.FindAsync(id);
         }
 
-        public async Task<ToDo> Add(ToDo toDo)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            await ToDoItems.AddAsync(toDo);
-            await SaveChangesAsync();
-            return toDo;
-        }
+            modelBuilder.Entity<ToDo>()
+                .ToTable("ToDoItems")
+                .HasKey(t => t.Id);
 
-        public async Task<IEnumerable<ToDo>> GetAll()
-        {
-            return await ToDoItems.ToListAsync();
-        }
-
-        public async Task<ToDo> Update(ToDo toDo)
-        {
-            ToDoItems.Update(toDo);
-            await SaveChangesAsync();
-            return toDo;
-        }
-
-        public async Task Delete(int id)
-        {
-            var toDo = await ToDoItems.FindAsync(id);
-            if (toDo != null)
-            {
-                ToDoItems.Remove(toDo);
-                await SaveChangesAsync();
-            }
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
