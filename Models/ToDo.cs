@@ -20,5 +20,14 @@ namespace EngineeringCentreDashboard.Models
             DueDate = dueDate;
             IsCompleted = false;
         }
+
+        public ToDo(int id, string title, string description, DateTime dueDate, bool isCompleted)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            DueDate = dueDate;
+            IsCompleted = isCompleted;
+        }
     }
 }

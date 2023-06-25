@@ -52,7 +52,7 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddDbContext<ToDoDbContext>(options =>
 //    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection")));
 
-builder.Services.AddDbContext<IToDoDbContext, ToDoDbContext>(options =>
+builder.Services.AddDbContext< ToDoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSqlConnection")));
 
 
