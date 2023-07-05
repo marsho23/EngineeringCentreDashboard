@@ -9,10 +9,22 @@ namespace EngineeringCentreDashboard.Business
 
         private readonly string _apiKey;
 
-        public WeatherHelper(string apiKey)
+        private readonly IRestClient _client;
+        public WeatherHelper(IConfiguration configuration, IRestClient client)
         {
-            _apiKey = apiKey;
+            _apiKey = configuration.GetValue<string>("WeatherAPIKey");
+            _client = client;
         }
+        //public WeatherHelper(string apiKey, IRestClient client)
+        //{
+        //    _apiKey = apiKey;
+        //    _client = client;
+        //}
+        //public WeatherHelper(string apiKey)
+        //{
+        //    _apiKey = apiKey;
+
+        //}
 
         //public List<Forecast> GetForecastForToday(string city)
         //{
@@ -39,7 +51,7 @@ namespace EngineeringCentreDashboard.Business
         public List<Forecast> GetForecastForToday(string city)
         {
             var client = new RestClient("http://api.openweathermap.org");
-            var request = new RestRequest("data/2.5/forecast", Method.Get);
+            var request = new RestRequest("data/2.5/forecast", Method.GET);
             request.AddParameter("q", city);
             request.AddParameter("appid", _apiKey);
             request.AddParameter("units", "metric");

@@ -1,5 +1,6 @@
 ﻿using EngineeringCentreDashboard.Business;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 
 namespace EngineeringCentreDashboard.Controllers
 {
@@ -7,12 +8,17 @@ namespace EngineeringCentreDashboard.Controllers
     [Route("api/[controller]")]
     public class WeatherController : ControllerBase
     {
-        private WeatherHelper _weatherHelper;
+        //private WeatherHelper _weatherHelper;
+        private readonly WeatherHelper _weatherHelper;
 
-        public WeatherController()
+        public WeatherController(IConfiguration configuration)
         {
-            _weatherHelper = new WeatherHelper("aad4d03ca4620f103c34e6578bdd3500");
+            _weatherHelper = new WeatherHelper(configuration, new RestClient());
         }
+        //public WeatherController()
+        //{
+        //    _weatherHelper = new WeatherHelper("aad4d03ca4620f103c34e6578bdd3500");
+        //}
 
         [HttpGet]
         public IActionResult Get()
